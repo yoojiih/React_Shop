@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 //salt가 몇글자인지 나타내는 saltRounds를 먼저 지정
 const saltRounds = 10
+
+const jwt = require('jsonwebtoken');
 //mongoose를 이용해 schema 생성
 const userSchema = mongoose.Schema({
   // 하나하나의 필드 작성
@@ -73,6 +75,41 @@ userSchema.pre('save', function (next) {
         next()
     }
 });
+
+
+// < 로그인 라우터 작성 이후 - 받은 plainPassword를 암호화해 db에 있는 암호화된 비밀번호와 비교 >
+
+// userSchema를 가져온 다음에 comparePassword function에 plainPassword, cb 을 준다음
+userSchema.methods.comparePassword = function (plainPassword, cb) {
+
+    // bcrypt를 가져와서 compare(plainPassword, userSchema에서 password(암호화된 비밀번호)를 가져옴, callback function )
+    bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
+
+        // 비밀번호가 다르면 callback error를 줌
+        if (err) return cb(err);
+
+        // 같다면 cb을 줄때 에러는 없고(null) isMatch: 비밀번호가 같음(true)을 넘겨줌
+        cb(null, isMatch);
+    })
+// 다시 login 라우터 쪽의 user.comparePassword(req.body.password, (err, isMatch) => { 로 가서 comparePassword 실행
+}
+
+// Web Token
+
+userSchema.methods.generateToken = function (cb) {
+    var user = this;
+    // jsonwebtoken(jwt의 sign 메소드)을 이용해서 db내 user._id와 secretToken(아무거나)를 합쳐 token을 생성함
+    // -> 나중에 token 해석 시 secretToken를 넣으면 user._id가 나오게 되기 때문에 이 사람이 누구인지 알 수 있음
+    // toHexString(): toHexString을 사용해 user._id를 plain object로 변환시켜야 에러 발생하지 않음
+    var token = jwt.sign(user._id.toHexString(), 'secretToken')
+    // 생성한 token을 userSchema에 있는 token 필드에 넣어줌
+    user.token = token
+    user.save(function (err, user) {
+        if (err) return cb(err)
+        // save 성공 시 err는 없고(null) user정보만 user.generateToken((err, user) => { 로 다시 전달해줌 (index.js에서 token꺼내 씀)
+        cb(null, user)
+    })
+} 
 
 // schema를 model로 감싸줌 (모델 이름, 스키마 이름)
 const User = mongoose.model('User', userSchema)
