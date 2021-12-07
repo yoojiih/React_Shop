@@ -56,7 +56,7 @@ app.get("/api/users/auth", auth, (req, res) => {
       name: req.user.name,
       lastname: req.user.lastname,
       role: req.user.role,
-      
+
       image: req.user.image,
       cart: req.user.cart,
       history: req.user.history
@@ -68,7 +68,7 @@ app.get("/api/users/auth", auth, (req, res) => {
 // user에 관한 api를 생성  -> express에서 제공되는 router를 이용
 // post 메소드를 이용하며 라우터의 end point는 register, callback function을  (req, res) => 넣어줌
 // http://localhost:5000/register
-router.post("/register", (req, res) => {
+app.post("/api/users/register", (req, res) => {
   // 정보들을 db에 넣기 위해서 request.body 작성
   // - User: client에서 가져온 회원 가입 할떄 필요한 정보들을 데이터 베이스에 넣어주기 위해 User model을 가져옴 
   // - const user: 이걸 이용해 user 인스턴스 생성
@@ -87,7 +87,7 @@ router.post("/register", (req, res) => {
 });
 
 
-router.post("/login", (req, res) => {
+app.post("/api/users/login", (req, res) => {
   //=================================
   //요청된(브라우저에 입력한) 이메일이 데이터베이스에 있는지 찾기
   //=================================
@@ -130,7 +130,29 @@ router.post("/login", (req, res) => {
       });
   });
 });
+//=================================
+//        로그아웃 라우터 생성
+//=================================
 
+// 로그인된 상태기 때문에 auth 미들웨어를 넣어줌
+app.get("/api/users/logout", auth, (req, res) => {
+    // 로그아웃 하려는 유저(User)를 데이터베이스에서 찾아서 그 유저의 토큰을 지워줌 (업데이트)
+    // 첫번째 object: 유저를 찾을 땐 auth 미들웨어에서 request에 넣어준 _id로 찾음
+    User.findOneAndUpdate({ _id: req.user._id }, 
+       // 두번재 object : 토큰을 지워줌
+       // 인증 시 클라이언트 쿠키에 있는 토큰을 서버쪽 db에 있는 토큰과 같은지 확인을 함으로써 인증을 완료했었기 때문에 
+       // 로그아웃 시 토큰을 지워주면 인증실패해 로그인 기능이 풀려버림
+      { token: "", tokenExp: "" }
+      // 마지막으로 callback function
+      , (err, doc) => {
+         // 에러 시
+        if (err) return res.json({ success: false, err });
+        // 성공 시
+        return res.status(200).send({
+            success: true
+        });
+    });
+});
 
 // app은 서버를 시작하며 5000번 포트에서 연결을 listen하면 콘솔 출력되도록함
 app.listen(port, () => {
