@@ -8,6 +8,9 @@ const port = 5000
 // browser 측에서 정보를 입력 시 서버측에서 받아서 처리하는 형식 (npm i body-parser)
 // 설치 후 bodyparser 가져옴
 const bodyParser = require("body-parser");
+// 개발환경 분리(로컬 vs 배포모드)
+const config = require("./config/key");
+
 // config.mongoURI: mongo db에서 유저 생성 후 복사한 connection app code
 const mongoose = require("mongoose");
 
