@@ -94,8 +94,7 @@ userSchema.methods.comparePassword = function (plainPassword, cb) {
 // 다시 login 라우터 쪽의 user.comparePassword(req.body.password, (err, isMatch) => { 로 가서 comparePassword 실행
 }
 
-// Web Token
-
+// json Web Token 
 userSchema.methods.generateToken = function (cb) {
     var user = this;
     // jsonwebtoken(jwt의 sign 메소드)을 이용해서 db내 user._id와 secretToken(아무거나)를 합쳐 token을 생성함
@@ -110,6 +109,22 @@ userSchema.methods.generateToken = function (cb) {
         cb(null, user)
     })
 } 
+// Auth
+userSchema.statics.findByToken = function (token, cb) {
+    var user = this;
+    // 가져온 토큰을 decode(복호화)할 땐 verify 사용
+    // 토큰 생성시 사용했던 secretToken을 넣어주면 decoded(디코드 된 결과물 = user_id)나옴
+    jwt.verify(token, 'secret', function (err, decode) {
+        // user_id 이용해서 유저를 찾은 다음 클라이언트에서 가져온 token과 DB에 보관된 토큰이 일치하는지 확인
+        // user 가져온 후 findOne(mongoDB 메소드)을 통해 user_id(decoded)와 token으로 찾음 
+        user.findOne({ "_id": decode, "token": token }, function (err, user) {
+            // 에러 있다면 callback으로 에러를 전달해줌
+            if (err) return cb(err);
+            // 에러 없다면 user정보를 전달해주고 다시 미들웨어 auth.js에 가서 token과 err, user callback 써줌
+            cb(null, user);
+        })
+    })
+}
 
 // schema를 model로 감싸줌 (모델 이름, 스키마 이름)
 const User = mongoose.model('User', userSchema)

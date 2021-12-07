@@ -36,7 +36,32 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-
+//=================================
+//  auth router 생성 (접근 권한 설정)
+//=================================
+// 미들웨어를 추가 (미들웨어: end point(/api/users/auth)의 request를 받은 후 callback function을 하기 전 중간(auth)에서 뭔갈 작업하기 위함) 
+// (middleware/auth.js)
+app.get("/api/users/auth", auth, (req, res) => {
+  // 여기 까지 미들웨어를 통과해 온 건 Authentication = True 라는 뜻
+  // res.status(200): 클라이언트에 authentication = ture 라는 정보를 전달해주기 위함
+  // json데이터로 클라이언트에 원하는 유저 정보(server/models/User.js내 userSchema)를 제공해줌
+  res.status(200).json({
+      //req.user._id => middleware에서 req.user = user 이런식으로 request에 넣어줬었기 때문에 가능함
+      //이렇게 정보를 주면 어떤 페이지에서든지 유저 정보를 이용 가능함
+      _id: req.user._id,
+      // 0이면 false(일반유저) 아니면 ture(관리자)
+      isAdmin: req.user.role === 0 ? false : true,
+      isAuth: true,
+      email: req.user.email,
+      name: req.user.name,
+      lastname: req.user.lastname,
+      role: req.user.role,
+      
+      image: req.user.image,
+      cart: req.user.cart,
+      history: req.user.history
+  });
+}); 
 //=================================
 //  회원가입을 위한 register 라우터 생성
 //=================================
