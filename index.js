@@ -20,9 +20,11 @@ const connect = mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUn
   .then(() => console.log('MongoDB Connected...'))
   // 연결 잘 안 됐을 경우 에러 표시
   .catch(err => console.log(err));
+
 //----- body parser option-------
 // client에서 오는 정보(application/x-www-form-urlencoded 이렇게 된 데이터)를 서버에서 분석해서 가져올 수 있게 해주는 것
 app.use(bodyParser.urlencoded({ extended: true }));
+
 // post 메소드를 이용하며 라우터의 end point는 register, callback function을  (req, res) => 넣어줌
 // http://localhost:5000/register
 app.use(bodyParser.json());
@@ -35,14 +37,17 @@ app.get('/', (req, res) => {
 // post 메소드를 이용하며 라우터의 end point는 register, callback function을  (req, res) => 넣어줌
 // http://localhost:5000/register
 // 회원가입을 위한 register 라우터 생성
+//user에 관한 api를 생성  -> express에서 제공되는 router를 이용
+//app.post('/api/users/register', (req, res) => {
 router.post("/register", (req, res) => {
 
   // 정보들을 db에 넣기 위해서 request.body 작성
 
   // User: client에서 가져온 회원 가입 할떄 필요한 정보들을 데이터 베이스에 넣어주기 위해 User model을 가져옴 
-  //const user: 이걸 이용해 user 인스턴스 생성
+  //  const user: 이걸 이용해 user 인스턴스 생성
   // (req.body): bodyparser를 이용해 받아온 json 형식으로 된 {id: "", password:""} client측 정보 들어가있음
   const user = new User(req.userInfo);
+  //  ------------저장하기 전-----------------
  // save: mongo db 메소드 => req.body의 정보들이 user model에 저장됨
   user.save((err, doc) => {
       // 저장 시 
