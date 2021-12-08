@@ -35,7 +35,12 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-
+// request를 받는 router 생성 
+// 클라이언트측에서 get으로 줬으니 get메소드 사용, end point는 /api/hello, (req, res) callback을 주고 
+// 원래 라우터 같은 경우 request받은 걸로 처리 후 front로 다시 response줌 (지금은 프론트에 response(메시지)만 줌)
+app.get('/api/hello', (req, res) => {
+  res.send('Hello World!~~ ')
+})
 //=================================
 //  auth router 생성 (접근 권한 설정)
 //=================================
