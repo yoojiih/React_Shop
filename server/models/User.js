@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 //salt가 몇글자인지 나타내는 saltRounds를 먼저 지정
 const saltRounds = 10
-
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
+
 //mongoose를 이용해 schema 생성
 const userSchema = mongoose.Schema({
   // 하나하나의 필드 작성
@@ -27,6 +28,14 @@ const userSchema = mongoose.Schema({
     role: {
         type: Number,
         default: 0
+    },
+    cart: {
+        type: Array,
+        default: []
+    },
+    history: {
+        type: Array,
+        default: []
     },
     //object를 주지않고 string 이런식으로만 해도 됨
     image: String,
@@ -100,9 +109,11 @@ userSchema.methods.generateToken = function (cb) {
     // jsonwebtoken(jwt의 sign 메소드)을 이용해서 db내 user._id와 secretToken(아무거나)를 합쳐 token을 생성함
     // -> 나중에 token 해석 시 secretToken를 넣으면 user._id가 나오게 되기 때문에 이 사람이 누구인지 알 수 있음
     // toHexString(): toHexString을 사용해 user._id를 plain object로 변환시켜야 에러 발생하지 않음
-    var token = jwt.sign(user._id.toHexString(), 'secretToken')
+    var token = jwt.sign(user._id.toHexString(), 'secret')
     // 생성한 token을 userSchema에 있는 token 필드에 넣어줌
-    user.token = token
+    var oneHour = moment().add(1, 'hour').valueOf();
+    user.tokenExp = oneHour;
+    user.token = token;
     user.save(function (err, user) {
         if (err) return cb(err)
         // save 성공 시 err는 없고(null) user정보만 user.generateToken((err, user) => { 로 다시 전달해줌 (index.js에서 token꺼내 씀)
