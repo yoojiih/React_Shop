@@ -1,6 +1,7 @@
 const express = require('express')
-// express function을 이용해서 새로운 express app을 만들고 
+// express function을 이용해서 새로운 express app 객체를 만들고 
 const app = express()
+// react build 파일에 접근하기 위해 필요함
 const path = require("path");
 const cors = require('cors')
 
