@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engine": {
+    "node": "10.16.0",
+    "npm": "6.9.0"
+  },
   "scripts": {
     "start": "node server/index.js",
     "backend": "nodemon server/index.js",
@@ -25,6 +29,7 @@
     "mongoose": "^6.1.0",
     "multer": "^1.4.4",
     "nodemon": "^2.0.15",
+    "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
     "socket.io": "^4.4.0"
   }
