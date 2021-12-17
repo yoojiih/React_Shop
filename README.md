@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # # 🛒 2021 Shop Project (React, Nodejs)
 
 https://yoojiih.shop
@@ -68,3 +69,6 @@ $ npm run dev
 ![navbar.png](navbar.png)
 # Shopping Bag
 ![shoppingbag.png](shoppingbag.png)
+=======
+
+>>>>>>> 4226a7694052e657c4f20e239fface9d4bfc9089
