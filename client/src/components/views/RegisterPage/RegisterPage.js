@@ -10,8 +10,8 @@ function RegisterPage(props) {
     const dispatch = useDispatch();
     // < 유효성 체크 >
     // 사용자가 입력할 때마다 추적 하기 위한 register, watch, formState을 import useForm을 통해 가져옴
-    //  version 1. 입력시 즉각적으로 유효성 체크 에러표시
-    //             const { register, watch, formState: { errors }, handleSubmit} = useForm({mode: "onChange"});
+    // version 1. 입력시 즉각적으로 유효성 체크 에러표시
+    //            const { register, watch, formState: { errors }, handleSubmit} = useForm({mode: "onChange"});
     // version 2. submit button누르기 전까진 유효성 체크 안함
     //            const { register, watch, formState: { errors }, handleSubmit } = useForm();
     const { register, watch, formState: { errors }, handleSubmit} = useForm({mode: "onChange"});
