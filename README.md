@@ -53,7 +53,7 @@ $ npm run dev
 
 # Landing
 
-![landing.png](landing.png)
+![landing.png](images/landing.png)
 
 # Sign in
 
