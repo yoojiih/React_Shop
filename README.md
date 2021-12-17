@@ -57,28 +57,28 @@ $ npm run dev
 
 # Sign in
 
-![login.png](login.png)
+![login.png](images/login.png)
 
 # Sign up
 
-![signup.png](signup.png)
+![signup.png](images/signup.png)
 
 # Upload
 
-![upload.png](upload.png)
+![upload.png](images/upload.png)
 
 # Product List
 
-![productlist.png](productlist.png)
+![productlist.png](images/productlist.png)
 
 # Product Detail Page
 
-![detail.png](detail.png)
+![detail.png](images/detail.png)
 
 # NavBar
 
-![navbar.png](navbar.png)
+![navbar.png](images/navbar.png)
 
 # Shopping Bag
 
-# ![shoppingbag.png](shoppingbag.png)
+![shoppingbag.png](images/shoppingbag.png)
